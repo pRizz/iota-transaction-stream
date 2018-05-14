@@ -1,6 +1,6 @@
 {
   "name": "iota-transaction-stream",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A microservice that transmits new transactions from an IOTA node to any number of listeners, in real-time, through WebSockets.",
   "scripts": {
     "start": "node ./bin/www",

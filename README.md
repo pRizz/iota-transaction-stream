@@ -1,6 +1,8 @@
 # IOTA Transaction Stream
 A microservice that transmits new transactions from an IOTA node to any number of listeners, in real-time, through WebSockets.
 
+This is a prerequisite for running Chatangle or Votangle.
+
 # Installation Instructions
 
 ## Dependencies
