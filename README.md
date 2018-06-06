@@ -39,7 +39,7 @@ If globally installed, example:
 iota-transaction-stream --iotaIP 123.45.67.890 --iotaZMQPort 5556 --webSocketServerPort 8008
 ```
 
-If  installed locally or running from an IDE:
+If installed locally or running from an IDE:
 
 ```bash
 npm run start -- --iotaIP 123.45.67.890 --iotaZMQPort 5556 webSocketServerPort 8008

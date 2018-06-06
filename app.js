@@ -38,7 +38,7 @@ if(argv.help) {
 }
 
 if(!argv.iotaIP) {
-  console.error(`You must supply an ip address to --iotaIP`)
+  console.error(`You must supply an IP address to --iotaIP`)
   printHelp()
 }
 
