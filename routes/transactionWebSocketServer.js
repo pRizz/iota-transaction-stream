@@ -26,7 +26,7 @@ function startServer(port) {
         })
 
         webSocketServer.broadcast(JSON.stringify({
-            clientCount: webSocketServer.clients.length
+            clientCount: webSocketServer.clients.size
         }))
     })
 
