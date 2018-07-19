@@ -7,13 +7,21 @@
 const WebSocket = require('ws')
 
 // TODO: Clear out dead connections; utilize pinging
-let webSocketServer
+let webSocketServer = null
 
 function publishTransactionToClients(transaction) {
+    if(!webSocketServer) {
+        throw 'Must start() server first!'
+    }
     webSocketServer.broadcast(JSON.stringify(transaction))
 }
 
 function startServer(port) {
+    if(webSocketServer) {
+        console.error('Server already running')
+        return
+    }
+
     webSocketServer = new WebSocket.Server({
         port
     })
@@ -39,11 +47,26 @@ function startServer(port) {
     }
 }
 
-module.exports = function(port) {
+function start({ port }) {
     startServer(port)
-
-    return {
-        publishTransactionToClients
-    }
 }
 
+async function stop() {
+    return await new Promise((resolve, reject) => {
+        if(!webSocketServer) {
+            return reject('No server to stop')
+        }
+        webSocketServer.close((error) => {
+            if(error) {
+                return reject(error)
+            }
+            resolve()
+        })
+    })
+}
+
+module.exports = {
+    start,
+    stop,
+    publishTransactionToClients
+}

@@ -103,6 +103,7 @@ module.exports = function(zmqIP, zmqPort = 5556) {
     start()
 
     return {
-        setTransactionCallback
+        setTransactionCallback,
+        stop
     }
 }

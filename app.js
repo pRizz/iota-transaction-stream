@@ -4,48 +4,24 @@
  * MIT Licensed
  */
 
-const argv = require('minimist')(process.argv.slice(2), {
-  'alias': {
-    'h': 'help',
-    'i': 'iotaIP',
-    'p': 'iotaZMQPort',
-    'w': 'webSocketServerPort'
-  },
-  'default': {
-    'iotaZMQPort': 5556,
-    'webSocketServerPort': 8008
-  }
-})
+const transactionWebSocketServer = require('./routes/transactionWebSocketServer')
+let iotaNodeListener = null
 
-function printHelp() {
-  console.log(`iota-transaction-stream
-  A microservice that transmits new transactions from an IOTA node to any number of listeners, in real-time, through WebSockets
-  Usage: iota-transaction-stream --iotaIP=ip [--iotaZMQPort=port] [--webSocketServerPort=port] [--help]
-    options:
-      -i, --iotaIP ip : the IP address of the IOTA node
-      -p, --iotaZMQPort port: the port of the ZMQ on the IOTA node; defaults to 5556
-      -w, --webSocketServerPort port: the port of the WebSocket server which relays new IOTA transactions; defaults to 8008
-      -h, --help : print this help info
-  
-  Example usage: iota-transaction-stream --iotaIP 123.45.67.890 --iotaZMQPort 5556 --webSocketServerPort 8008
-  Example if running from an IDE: npm run start -- --iotaIP 123.45.67.890 --iotaZMQPort 5556 webSocketServerPort 8008
-    `)
-  process.exit(0)
+function start({ port, iotaIP, iotaZMQPort }) {
+    transactionWebSocketServer.start({ port })
+    iotaNodeListener = require('./routes/iotaNodeListener')(iotaIP, iotaZMQPort)
+    iotaNodeListener.setTransactionCallback(transaction => {
+        transactionWebSocketServer.publishTransactionToClients(transaction)
+    })
 }
 
-if(argv.help) {
-  printHelp()
+async function stop() {
+    await transactionWebSocketServer && transactionWebSocketServer.stop()
+    iotaNodeListener && iotaNodeListener.stop()
 }
 
-if(!argv.iotaIP) {
-  console.error(`You must supply an IP address to --iotaIP`)
-  printHelp()
+
+module.exports = {
+    start,
+    stop
 }
-
-const transactionWebSocketServer = require('./routes/transactionWebSocketServer')(argv.webSocketServerPort)
-const iotaNodeListener = require('./routes/iotaNodeListener')(argv.iotaIP, argv.iotaZMQPort)
-iotaNodeListener.setTransactionCallback(transaction => {
-    transactionWebSocketServer.publishTransactionToClients(transaction)
-})
-
-module.exports = {}
