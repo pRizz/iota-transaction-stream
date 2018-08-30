@@ -1,4 +1,7 @@
 # IOTA Transaction Stream
+
+[![Greenkeeper badge](https://badges.greenkeeper.io/pRizz/IOTA-Transaction-Stream.svg)](https://greenkeeper.io/)
+
 A microservice that transmits new transactions from an IOTA node to any number of listeners, in real-time, through WebSockets.
 
 This is a prerequisite for running Chatangle or Votangle.
