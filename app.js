@@ -5,6 +5,8 @@
  */
 
 const transactionWebSocketServer = require('./routes/transactionWebSocketServer')
+const gephiStreamer = require('./routes/gephi-streamer')
+
 let iotaNodeListener = null
 
 function start({ port, iotaIP, iotaZMQPort }) {
@@ -12,6 +14,7 @@ function start({ port, iotaIP, iotaZMQPort }) {
     iotaNodeListener = require('./routes/iotaNodeListener')(iotaIP, iotaZMQPort)
     iotaNodeListener.setTransactionCallback(transaction => {
         transactionWebSocketServer.publishTransactionToClients(transaction)
+        gephiStreamer.sendNode(transaction)
     })
 }
 
